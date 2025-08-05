@@ -1,0 +1,72 @@
+{
+  "info": {
+    "name": "Uber - Gestión de Viajes",
+    "_postman_id": "a1b2c3d4-uber-api-gestion-viajes",
+    "description": "Colección de pruebas para API de Gestión de Viajes en Node.js",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Crear viaje",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"origen\": \"Parque Central\",\n  \"destino\": \"Aeropuerto\",\n  \"tarifa\": 150.75,\n  \"pasajeroId\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/viajes",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["viajes"]
+        }
+      }
+    },
+    {
+      "name": "Obtener viaje por ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/viajes/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["viajes", "1"]
+        }
+      }
+    },
+    {
+      "name": "Asignar conductor",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"conductorId\": 2\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/viajes/1/asignar-conductor",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["viajes", "1", "asignar-conductor"]
+        }
+      }
+    },
+    {
+      "name": "Finalizar viaje",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "http://localhost:3000/viajes/1/finalizar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["viajes", "1", "finalizar"]
+        }
+      }
+    }
+  ]
+}
