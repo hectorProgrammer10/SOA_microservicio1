@@ -1,14 +1,19 @@
-// ----- Archivo: src/ports/viaje.repository.js -----
+// ----- Archivo: src/infrastructure/repositories/viaje.repository.js -----
+const ViajeModel = require("../../database/models/viaje.model");
+
 module.exports = {
   create: async (viajeEntity) => {
-    throw new Error("Not implemented");
+    const doc = new ViajeModel(viajeEntity);
+    return await doc.save();
   },
 
   findById: async (id) => {
-    throw new Error("Not implemented");
+    return await ViajeModel.findById(id).lean();
   },
 
   save: async (viajeEntity) => {
-    throw new Error("Not implemented");
+    return await ViajeModel.findByIdAndUpdate(viajeEntity.id, viajeEntity, {
+      new: true,
+    });
   },
 };

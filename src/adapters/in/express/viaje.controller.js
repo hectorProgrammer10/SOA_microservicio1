@@ -1,14 +1,33 @@
 // ----- Archivo: src/adapters/in/express/viaje.controller.js -----
-const crearViaje = require("../../../application/usecases/crearViaje");
-const obtenerViajePorId = require("../../../application/usecases/obtenerViajePorId");
-const asignarConductor = require("../../../application/usecases/asignarConductor");
-const finalizarViaje = require("../../../application/usecases/finalizarViaje");
-const viajeRepository = require("../../out/sequelize/viaje.repository");
+const {
+  CrearViajeCommand,
+} = require("../../../domain/comands/crearViaje.command");
+const {
+  AsignarConductorCommand,
+} = require("../../../domain/comands/asignarConductor.command");
+const {
+  FinalizarViajeCommand,
+} = require("../../../domain/comands/finalizarViaje.comman");
+
+const {
+  crearViajeHandler,
+} = require("../../../domain/handlers/crearViaje.handler");
+const {
+  asignarConductorHandler,
+} = require("../../../domain/handlers/asignarConductor.handler");
+const {
+  finalizarViajeHandler,
+} = require("../../../domain/handlers/finalizarViaje.handler");
+
+const {
+  obtenerViajePorId,
+} = require("../../../application/queris/obtenerViajePorId.query");
 
 exports.crearViaje = async (req, res) => {
   try {
-    const nuevoViaje = await crearViaje(req.body, { viajeRepository });
-    res.status(201).json(nuevoViaje);
+    const command = new CrearViajeCommand(req.body);
+    const result = await crearViajeHandler.handle(command);
+    res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -16,9 +35,9 @@ exports.crearViaje = async (req, res) => {
 
 exports.obtenerViajePorId = async (req, res) => {
   try {
-    const viaje = await obtenerViajePorId(req.params.id, { viajeRepository });
-    if (!viaje) return res.status(404).json({ error: "Viaje no encontrado" });
-    res.json(viaje);
+    const result = await obtenerViajePorId(req.params.id);
+    if (!result) return res.status(404).json({ error: "Viaje no encontrado" });
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -26,12 +45,12 @@ exports.obtenerViajePorId = async (req, res) => {
 
 exports.asignarConductor = async (req, res) => {
   try {
-    const viajeActualizado = await asignarConductor(
-      req.params.id,
-      req.body.conductorId,
-      { viajeRepository }
-    );
-    res.json({ mensaje: "Conductor asignado", viaje: viajeActualizado });
+    const command = new AsignarConductorCommand({
+      viajeId: req.params.id,
+      conductorId: req.body.conductorId,
+    });
+    const result = await asignarConductorHandler.handle(command);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -39,10 +58,9 @@ exports.asignarConductor = async (req, res) => {
 
 exports.finalizarViaje = async (req, res) => {
   try {
-    const viajeFinalizado = await finalizarViaje(req.params.id, {
-      viajeRepository,
-    });
-    res.json({ mensaje: "Viaje finalizado", viaje: viajeFinalizado });
+    const command = new FinalizarViajeCommand({ viajeId: req.params.id });
+    const result = await finalizarViajeHandler.handle(command);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
